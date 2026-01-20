@@ -1,0 +1,151 @@
+/* --- RESET & LAYOUT --- */
+body {
+  background-color: #0b0f19;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- BUTTON CONTAINER --- */
+.cta-button {
+  background: linear-gradient(90deg, #071731 0%, #1c3048 100%);
+  border: 1px solid rgba(44, 63, 233, 0.545);
+  border-radius: 50px;
+  padding: 10px 25px 10px 10px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  color: white;
+  
+  
+  
+  /* Smooth Transition */
+  transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  
+  /* Prevent blue highlight on mobile tap */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --- INTERACTION STATES (Hover & Active) --- */
+/* We add .is-active for the Mobile Logic */
+.cta-button:hover, .cta-button.is-active {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Speed up Earth on interactions */
+.cta-button:hover .earth-land, .cta-button.is-active .earth-land { 
+  animation-duration: 6s; 
+}
+.cta-button:hover .earth-clouds, .cta-button.is-active .earth-clouds { 
+  animation-duration: 7s; 
+  animation-direction: normal;
+}
+
+/* Speed up Stars */
+.cta-button:hover .star, .cta-button.is-active .star { 
+  animation-duration: 0.5s; 
+}
+
+/* Move Arrow */
+.cta-button:hover .arrow, .cta-button.is-active .arrow { 
+  transform: translateX(3px); 
+}
+
+/* --- EARTH WRAPPER --- */
+.earth-wrapper {
+  width: 45px;
+  height: 45px;
+  position: relative;
+  border-radius: 50%;
+  z-index: 1;
+  overflow: hidden;
+  background: #16aeff;
+  transform: translateZ(0); /* Hardware Accel */
+  
+  /* The Heartbeat Effect (Spec: every 5-10s) */
+  animation: heartBeat 5s ease-in-out infinite;
+
+  /* Outer Glow */
+  box-shadow: 0 0 5px rgba(2, 117, 248, 0.781), inset 0px 0px 1px rgba(2, 117, 248, 0.781);
+}
+
+/* --- LAYERS --- */
+.earth-land {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  /* Using your defined asset path */
+  background-image: url("assets/Whole_world_-_land_and_oceans.jpg");
+  background-size: 90px 45px; /* Keeps 2:1 Ratio */
+  background-repeat: repeat-x;
+  opacity: 0.70;
+  animation: spinEarth 100s linear infinite;
+}
+
+.earth-clouds {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  /* Using your defined asset path */
+  background-image: url('assets/Earth-clouds.png');
+  background-size: 90px 45px;
+  background-repeat: repeat-x;
+  opacity: 0.8;
+  mix-blend-mode: screen;
+  animation: spinEarth 150s linear infinite reverse;
+}
+
+.sphere-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  z-index: 5;
+  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 85%, rgba(0,0,0,0.8) 100%);
+  box-shadow: inset -5px -5px 10px rgba(0,0,0,0.5);
+}
+
+/* --- STARS --- */
+.stars-layer {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50px;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+.star { position: absolute; background: white; border-radius: 50%; opacity: 0; animation: twinkle 3s infinite; }
+.star:nth-child(1) { top: 20%; left: 30%; width: 1px; height: 1px; animation-delay: 1.5s; }
+.star:nth-child(2) { top: 80%; left: 45%; width: 2px; height: 2px; animation-delay: 0s; }
+.star:nth-child(3) { top: 30%; right: 40%; width: 2px; height: 2px; animation-delay: 0.5s; }
+
+/* --- TEXT --- */
+.btn-text {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.arrow { font-size: 18px; font-weight: bold; transition: transform 0.3s ease; }
+
+/* --- KEYFRAMES --- */
+@keyframes spinEarth {
+  0% { background-position-x: 0px; }
+  100% { background-position-x: -90px; }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* QA FIX: Subtle pulse every 7 seconds */
+@keyframes heartBeat {
+  0%, 10%, 100% { transform: scale(1); }
+  5% { transform: scale(1.1); } /* Quick pulse up */
+}
