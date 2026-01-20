@@ -12,10 +12,10 @@ body {
 
 /* --- BUTTON CONTAINER --- */
 .cta-button {
-  background: linear-gradient(90deg, #071731 0%, #1c3048 100%);
-  border: 1px solid rgba(44, 63, 233, 0.545);
+  background: transparent;
+  border: none;
   border-radius: 50px;
-  padding: 10px 25px 10px 10px;
+  padding: 20px 35px 20px 20px;
   display: flex;
   align-items: center;
   gap: 15px;
@@ -23,6 +23,13 @@ body {
   position: relative;
   text-decoration: none;
   color: white;
+  overflow: hidden;
+  isolation: isolate;
+  
+  /* Pre-render shadow to prevent jump */
+  box-shadow: 0 0 15px rgba(2, 117, 248, 0);
+  filter: brightness(1);
+  will-change: transform, filter;
   
   
   
@@ -31,13 +38,44 @@ body {
   
   /* Prevent blue highlight on mobile tap */
   -webkit-tap-highlight-color: transparent;
+
+  /* Fix text jump on hover */
+  backface-visibility: hidden;
+  transform: scale(1) translateZ(0);
+}
+
+/* Flashlight Effect */
+.cta-button::before {
+  content: "";
+  position: absolute;
+  top: -50%; left: -50%; width: 200%; height: 200%;
+  background: conic-gradient(from 0deg, transparent 0%, transparent 70%, #16ffa6 85%, transparent 50%);
+  animation: rotateBorder 2s linear infinite;
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.cta-button:hover::before, .cta-button.is-active::before {
+  opacity: 1;
+}
+
+/* Main Background */
+.cta-button::after {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px; right: 2px; bottom: 2px;
+  background: linear-gradient(90deg, #071731 0%, #1c3048 100%);
+  border-radius: 50px;
+  z-index: -1;
 }
 
 /* --- INTERACTION STATES (Hover & Active) --- */
 /* We add .is-active for the Mobile Logic */
 .cta-button:hover, .cta-button.is-active {
-  transform: scale(1.05);
+  transform: scale(1.05) translateZ(0);
   filter: brightness(1.1);
+  box-shadow: 0 0 15px rgba(2, 117, 248, 0.781);
 }
 
 /* Speed up Earth on interactions */
@@ -56,7 +94,7 @@ body {
 
 /* Move Arrow */
 .cta-button:hover .arrow, .cta-button.is-active .arrow { 
-  transform: translateX(3px); 
+  animation: arrowLoop 1s linear infinite;
 }
 
 /* --- EARTH WRAPPER --- */
@@ -74,7 +112,7 @@ body {
   animation: heartBeat 5s ease-in-out infinite;
 
   /* Outer Glow */
-  box-shadow: 0 0 5px rgba(2, 117, 248, 0.781), inset 0px 0px 1px rgba(2, 117, 248, 0.781);
+  box-shadow: 0 0 5px #16aeff, inset 0px 0px 1px #16aeff;
 }
 
 /* --- LAYERS --- */
@@ -130,8 +168,9 @@ body {
   font-weight: 700;
   letter-spacing: 0.3px;
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  transform: translateZ(0);
 }
-.arrow { font-size: 18px; font-weight: bold; transition: transform 0.3s ease; }
+.arrow { font-size: 18px; font-weight: bold; transform: translateZ(0); }
 
 /* --- KEYFRAMES --- */
 @keyframes spinEarth {
@@ -148,4 +187,17 @@ body {
 @keyframes heartBeat {
   0%, 10%, 100% { transform: scale(1); }
   5% { transform: scale(1.1); } /* Quick pulse up */
+}
+
+@keyframes arrowLoop {
+  0% { transform: translateX(0) translateZ(0); animation-timing-function: ease-out; }
+  25% { transform: translateX(3px) translateZ(0); animation-timing-function: ease-in; }
+  50% { transform: translateX(0) translateZ(0); animation-timing-function: ease-out; }
+  75% { transform: translateX(-3px) translateZ(0); animation-timing-function: ease-in; }
+  100% { transform: translateX(0) translateZ(0); }
+}
+
+@keyframes rotateBorder {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
