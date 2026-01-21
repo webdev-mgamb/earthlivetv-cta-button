@@ -1,4 +1,4 @@
-# EarthTV Animated CTA Button
+# EarthTVLive Animated CTA Button
 
 A lightweight, performance-focused CSS animation for the "Take Me Anywhere" feature.
 
